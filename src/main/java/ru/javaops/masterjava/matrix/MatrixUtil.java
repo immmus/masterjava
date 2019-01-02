@@ -1,8 +1,12 @@
 package ru.javaops.masterjava.matrix;
 
+import java.util.List;
 import java.util.Random;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 /**
  * gkislin
@@ -10,28 +14,51 @@ import java.util.concurrent.ExecutorService;
  */
 public class MatrixUtil {
 
-    // TODO implement parallel multiplication matrixA*matrixB
-    public static int[][] concurrentMultiply(int[][] matrixA, int[][] matrixB, ExecutorService executor) throws InterruptedException, ExecutionException {
+        public static int[][] concurrentMultiply(int[][] matrixA, int[][] matrixB, ExecutorService executor) throws InterruptedException, ExecutionException {
         final int matrixSize = matrixA.length;
         final int[][] matrixC = new int[matrixSize][matrixSize];
 
+        List<Callable<Void>> collect = IntStream.range(0, matrixSize).parallel()
+                .mapToObj(col -> {
+                    final int[] columnMatrixB = new int[matrixSize];
+                    return (Callable<Void>) () -> {
+                        for (int k = 0; k < matrixSize; k++) {
+                            columnMatrixB[k] = matrixB[k][col];
+                        }
+                        for (int row = 0; row < matrixSize; row++) {
+                            int sum = 0;
+                            final int[] rowMatrixA = matrixA[row];
+                            for (int k = 0; k < matrixSize; k++) {
+                                sum += rowMatrixA[k] * columnMatrixB[k];
+                            }
+                            matrixC[row][col] = sum;
+                        }
+                        return null;
+                    };
+                }).collect(Collectors.toList());
+        executor.invokeAll(collect);
         return matrixC;
     }
 
-    // TODO optimize by https://habrahabr.ru/post/114797/
     public static int[][] singleThreadMultiply(int[][] matrixA, int[][] matrixB) {
         final int matrixSize = matrixA.length;
         final int[][] matrixC = new int[matrixSize][matrixSize];
 
-        for (int i = 0; i < matrixSize; i++) {
-            for (int j = 0; j < matrixSize; j++) {
-                int sum = 0;
+            for (int col = 0; col < matrixSize; col++) {
+                final int[] columnMatrixB = new int[matrixSize];
                 for (int k = 0; k < matrixSize; k++) {
-                    sum += matrixA[i][k] * matrixB[k][j];
+                    columnMatrixB[k] = matrixB[k][col];
                 }
-                matrixC[i][j] = sum;
+
+                for (int row = 0; row < matrixSize; row++) {
+                    int sum = 0;
+                    final int[] rowMatrixA = matrixA[row];
+                    for (int k = 0; k < matrixSize; k++) {
+                        sum += rowMatrixA[k] * columnMatrixB[k];
+                    }
+                    matrixC[row][col] = sum;
+                }
             }
-        }
         return matrixC;
     }
 

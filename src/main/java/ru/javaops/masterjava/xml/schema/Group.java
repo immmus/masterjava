@@ -21,7 +21,6 @@ import javax.xml.bind.annotation.XmlType;
  *         &lt;element name="name" type="{http://www.w3.org/2001/XMLSchema}string"/>
  *       &lt;/sequence>
  *       &lt;attribute name="groupType" type="{http://javaops.ru}GroupType" />
- *       &lt;attribute name="project" type="{http://www.w3.org/2001/XMLSchema}string" />
  *     &lt;/restriction>
  *   &lt;/complexContent>
  * &lt;/complexType>
@@ -39,8 +38,6 @@ public class Group {
     protected String name;
     @XmlAttribute(name = "groupType")
     protected GroupType groupType;
-    @XmlAttribute(name = "project")
-    protected String project;
 
     /**
      * Gets the value of the name property.
@@ -88,30 +85,6 @@ public class Group {
      */
     public void setGroupType(GroupType value) {
         this.groupType = value;
-    }
-
-    /**
-     * Gets the value of the project property.
-     * 
-     * @return
-     *     possible object is
-     *     {@link String }
-     *     
-     */
-    public String getProject() {
-        return project;
-    }
-
-    /**
-     * Sets the value of the project property.
-     * 
-     * @param value
-     *     allowed object is
-     *     {@link String }
-     *     
-     */
-    public void setProject(String value) {
-        this.project = value;
     }
 
 }

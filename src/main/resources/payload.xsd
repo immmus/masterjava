@@ -6,7 +6,14 @@
 
     <xs:element name="Payload">
         <xs:complexType>
-            <xs:all>
+            <xs:sequence>
+                <xs:element name="Projects">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                            <xs:element ref="Project"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
                 <xs:element name="Cities">
                     <xs:complexType>
                         <xs:sequence minOccurs="1" maxOccurs="unbounded">
@@ -21,21 +28,7 @@
                         </xs:sequence>
                     </xs:complexType>
                 </xs:element>
-                <xs:element name="Projects">
-                    <xs:complexType>
-                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                            <xs:element ref="Project"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-                <xs:element name="Groups">
-                    <xs:complexType>
-                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-                            <xs:element ref="Group"/>
-                        </xs:sequence>
-                    </xs:complexType>
-                </xs:element>
-            </xs:all>
+            </xs:sequence>
         </xs:complexType>
     </xs:element>
 
@@ -73,6 +66,13 @@
         <xs:complexType>
             <xs:sequence>
                 <xs:element type="xs:string" name="description"/>
+                <xs:element name="Groups">
+                    <xs:complexType>
+                        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+                            <xs:element ref="Group"/>
+                        </xs:sequence>
+                    </xs:complexType>
+                </xs:element>
             </xs:sequence>
             <xs:attribute type="xs:string" name="name"/>
         </xs:complexType>
@@ -84,7 +84,6 @@
                 <xs:element type="xs:string" name="name"/>
             </xs:sequence>
             <xs:attribute type="GroupType" name="groupType" use="optional"/>
-            <xs:attribute type="xs:string" name="project" use="optional"/>
         </xs:complexType>
 
 

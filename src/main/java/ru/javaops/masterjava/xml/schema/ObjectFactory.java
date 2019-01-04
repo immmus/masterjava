@@ -17,7 +17,7 @@ import javax.xml.namespace.QName;
  * content can consist of schema derived interfaces 
  * and classes representing the binding of schema 
  * type definitions, element declarations and model 
- * groups.  Factory methods for each of these are 
+ * groupList.  Factory methods for each of these are
  * provided in this class.
  * 
  */
@@ -35,6 +35,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link Project }
+     * 
+     */
+    public Project createProject() {
+        return new Project();
+    }
+
+    /**
      * Create an instance of {@link Payload }
      * 
      */
@@ -43,11 +51,11 @@ public class ObjectFactory {
     }
 
     /**
-     * Create an instance of {@link Project }
+     * Create an instance of {@link Project.Groups }
      * 
      */
-    public Project createProject() {
-        return new Project();
+    public Project.Groups createProjectGroups() {
+        return new Project.Groups();
     }
 
     /**
@@ -67,6 +75,14 @@ public class ObjectFactory {
     }
 
     /**
+     * Create an instance of {@link Payload.Projects }
+     * 
+     */
+    public Payload.Projects createPayloadProjects() {
+        return new Payload.Projects();
+    }
+
+    /**
      * Create an instance of {@link Payload.Cities }
      * 
      */
@@ -80,22 +96,6 @@ public class ObjectFactory {
      */
     public Payload.Users createPayloadUsers() {
         return new Payload.Users();
-    }
-
-    /**
-     * Create an instance of {@link Payload.Projects }
-     * 
-     */
-    public Payload.Projects createPayloadProjects() {
-        return new Payload.Projects();
-    }
-
-    /**
-     * Create an instance of {@link Payload.Groups }
-     * 
-     */
-    public Payload.Groups createPayloadGroups() {
-        return new Payload.Groups();
     }
 
     /**

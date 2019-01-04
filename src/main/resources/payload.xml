@@ -1,6 +1,46 @@
 <Payload xmlns="http://javaops.ru"
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://javaops.ru payload.xsd">
+    <Projects>
+        <Project name="topJava">
+            <description>
+                Разработка полнофункционального Spring 5/JPA Enterprise приложения
+                c авторизацией и правами доступа на основе ролей на самом востребованном Java стеке:
+                Maven, Spring MVC, Security, JPA(Hibernate), REST(Jackson), Bootstrap (css,js), datatables,
+                jQuery + plugins, Java 8 Stream and Time API. Сохранение в Postgresql и HSQLDB,
+                деплой в облачный сервис Heroku.
+            </description>
+            <Groups>
+                <Group groupType="finished">
+                    <name>topJava15</name>
+                </Group>
+                <Group groupType="registering">
+                    <name>topJava16</name>
+                </Group>
+            </Groups>
+        </Project>
+        <Project name="masterJava">
+            <description>
+                Разработка полнофункционального многомодульного Maven проекта, с
+                остоящего из трех веб приложений. На стеке:
+                XML(JAXB, StAX, XPath, XSLT), SOAP (JAX-WS, MTOM),
+                JAX-RS (Jersey), JMS (ActiveMQ), AKKA (Typed и Untyped Actors),
+                servlet 3.0, jDBI, миграция базы LiquiBase, Guava, Thymeleaf, Lombook,
+                StreamEx, Typesafe Config, Java Microbenchmark JMH.
+            </description>
+            <Groups>
+                <Group groupType="current">
+                    <name>masterJava03</name>
+                </Group>
+            </Groups>
+        </Project>
+    </Projects>
+    <Cities>
+        <City id="spb">Санкт-Петербург</City>
+        <City id="kiv">Киев</City>
+        <City id="mnsk">Минск</City>
+        <City id="kzn">Казань</City>
+    </Cities>
     <Users>
         <User flag="active" city="kzn" email="immmus@gmail.com">
             <fullName>Ilya Ksenofontov</fullName>
@@ -22,46 +62,5 @@
             <inGroups/>
         </User>
     </Users>
-    <Cities>
-        <City id="spb">Санкт-Петербург</City>
-        <City id="kiv">Киев</City>
-        <City id="mnsk">Минск</City>
-        <City id="kzn">Казань</City>
-    </Cities>
 
-    <Groups>
-        <Group groupType="finished" project="topJava">
-            <name>topJava15</name>
-        </Group>
-
-        <Group groupType="registering" project="topJava">
-            <name>topJava16</name>
-        </Group>
-
-        <Group groupType="current" project="masterJava">
-            <name>masterJava03</name>
-        </Group>
-    </Groups>
-
-    <Projects>
-        <Project name="topJava">
-            <description>
-                Разработка полнофункционального Spring 5/JPA Enterprise приложения
-                c авторизацией и правами доступа на основе ролей на самом востребованном Java стеке:
-                Maven, Spring MVC, Security, JPA(Hibernate), REST(Jackson), Bootstrap (css,js), datatables,
-                jQuery + plugins, Java 8 Stream and Time API. Сохранение в Postgresql и HSQLDB,
-                деплой в облачный сервис Heroku.
-            </description>
-        </Project>
-        <Project name="masterJava">
-            <description>
-                Разработка полнофункционального многомодульного Maven проекта, с
-                остоящего из трех веб приложений. На стеке:
-                XML(JAXB, StAX, XPath, XSLT), SOAP (JAX-WS, MTOM),
-                JAX-RS (Jersey), JMS (ActiveMQ), AKKA (Typed и Untyped Actors),
-                servlet 3.0, jDBI, миграция базы LiquiBase, Guava, Thymeleaf, Lombook,
-                StreamEx, Typesafe Config, Java Microbenchmark JMH.
-            </description>
-        </Project>
-    </Projects>
 </Payload>

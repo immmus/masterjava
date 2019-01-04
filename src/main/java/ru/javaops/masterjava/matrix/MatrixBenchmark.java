@@ -1,12 +1,18 @@
 package ru.javaops.masterjava.matrix;
 
-import  org.openjdk.jmh.annotations.*;
+import com.google.common.io.Resources;
+import org.openjdk.jmh.annotations.*;
 import org.openjdk.jmh.runner.Runner;
 import org.openjdk.jmh.runner.RunnerException;
 import org.openjdk.jmh.runner.options.Options;
 import org.openjdk.jmh.runner.options.OptionsBuilder;
 import org.openjdk.jmh.runner.options.TimeValue;
+import ru.javaops.masterjava.MainXml;
+import ru.javaops.masterjava.xml.schema.User;
+import ru.javaops.masterjava.xml.util.JaxbParser;
 
+import java.io.InputStream;
+import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -37,7 +43,7 @@ public class MatrixBenchmark {
     }
 
     private ExecutorService executor;
-
+    private JaxbParser jaxbParser;
     public static void main(String[] args) throws RunnerException {
         Options options = new OptionsBuilder()
                 .include(MatrixBenchmark.class.getSimpleName())
@@ -47,7 +53,11 @@ public class MatrixBenchmark {
                 .build();
         new Runner(options).run();
     }
-
+    @Benchmark
+    public List<User> jaxbRealization () throws Exception{
+        InputStream is = Resources.getResource("payload.xml").openStream();
+        return MainXml.jaxbRealization("masterJava", is);
+    }
     //    @Benchmark
     public int[][] singleThreadMultiplyOpt() throws Exception {
         return MatrixUtil.singleThreadMultiplyOpt(matrixA, matrixB);
@@ -58,17 +68,17 @@ public class MatrixBenchmark {
         return MatrixUtil.singleThreadMultiplyOpt(matrixA, matrixB);
     }
 
-    @Benchmark
+   //@Benchmark
     public int[][] concurrentMultiplyStreams() throws Exception {
         return MatrixUtil.concurrentMultiplyStreams(matrixA, matrixB, threadNumber);
     }
 
-    //    @Benchmark
+    //@Benchmark
     public int[][] concurrentMultiply() throws Exception {
         return MatrixUtil.concurrentMultiply(matrixA, matrixB, executor);
     }
 
-    @Benchmark
+    //@Benchmark
     public int[][] concurrentMultiply2() throws Exception {
         return MatrixUtil.concurrentMultiply2(matrixA, matrixB, executor);
     }

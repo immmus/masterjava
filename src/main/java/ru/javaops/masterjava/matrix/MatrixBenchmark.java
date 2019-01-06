@@ -58,7 +58,7 @@ public class MatrixBenchmark {
         return MatrixUtil.singleThreadMultiplyOpt(matrixA, matrixB);
     }
 
-    @Benchmark
+    //@Benchmark
     public int[][] concurrentMultiplyStreams() throws Exception {
         return MatrixUtil.concurrentMultiplyStreams(matrixA, matrixB, threadNumber);
     }
@@ -68,10 +68,20 @@ public class MatrixBenchmark {
         return MatrixUtil.concurrentMultiply(matrixA, matrixB, executor);
     }
 
-    @Benchmark
+   // @Benchmark
     public int[][] concurrentMultiply2() throws Exception {
         return MatrixUtil.concurrentMultiply2(matrixA, matrixB, executor);
     }
+
+    /*    @Benchmark
+    public static Set<User> parseByJaxb() throws Exception {
+        return MainXml.parseByJaxb("masterjava", Resources.getResource("payload.xml"));
+    }
+
+    @Benchmark
+    public static Set<User> processByStax() throws Exception {
+        return MainXml.processByStax("masterjava", Resources.getResource("payload.xml"));
+    }*/
 
     @Setup
     public void setup() {

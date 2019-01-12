@@ -1,15 +1,20 @@
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>Upload XML</title>
 </head>
 <body>
+<h4><a href="/users">Users from base</a></h4>
 <form action="" method="post" enctype="multipart/form-data">
     <h3>Select xml file to upload</h3>
     <p>
-        <input type="file" name="fileToUpload" id="fileToUpload"><br/>
+        <input type="file" name="fileToUpload" id="fileToUpload"/>
     </p>
     <p>
-        <input type="submit" value="Upload" name="submit">
+        <input type="number" name="chunkSize" id="chunkSize" placeholder="upload chunk size"/>
+    </p>
+    <p>
+        <input type="submit" value="Upload" name="submit"/>
     </p>
 </form>
 </body>

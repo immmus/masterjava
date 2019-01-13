@@ -15,6 +15,8 @@ import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 import static ru.javaops.masterjava.common.web.ThymeleafListener.engine;
 
@@ -47,15 +49,25 @@ public class UploadServlet extends HttpServlet {
             }
             try (InputStream is = filePart.getInputStream()) {
                 List<User> users = userProcessor.process(is);
-                webContext.setVariable("users", users);
                 if (users != null) {
-                    dao.insertAll(users, chunkSize);
+                    List<User> uploadUsers = insertAllAndGetDuplicate(chunkSize, users);
+                    webContext.setVariable("uploadUsers", uploadUsers);
+                    webContext.setVariable("duplicateUsers", users);
                 }
+
                 engine.process("result", webContext, resp.getWriter());
             }
         } catch (Exception e) {
             webContext.setVariable("exception", e);
             engine.process("exception", webContext, resp.getWriter());
         }
+    }
+
+    private List<User> insertAllAndGetDuplicate(int chunkSize, List<User> users) {
+        int[] idx = dao.insertAll(users, chunkSize);
+        return IntStream.range(0, users.size())
+                .filter(i -> idx[i] != 0)
+                .mapToObj(users::remove)
+                .collect(Collectors.toList());
     }
 }

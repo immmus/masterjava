@@ -1,5 +1,8 @@
 package ru.javaops.masterjava.persist;
 
+import com.typesafe.config.Config;
+import ru.javaops.masterjava.config.Configs;
+
 import java.sql.DriverManager;
 
 public class DBITestProvider {

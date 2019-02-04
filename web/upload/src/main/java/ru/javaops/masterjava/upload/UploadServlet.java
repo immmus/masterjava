@@ -2,7 +2,10 @@ package ru.javaops.masterjava.upload;
 
 import com.google.common.collect.ImmutableMap;
 import lombok.extern.slf4j.Slf4j;
+import lombok.val;
 import org.thymeleaf.context.WebContext;
+import ru.javaops.masterjava.persist.model.City;
+import ru.javaops.masterjava.xml.util.StaxStreamProcessor;
 
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -14,6 +17,7 @@ import javax.servlet.http.Part;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.List;
+import java.util.Map;
 
 import static ru.javaops.masterjava.common.web.ThymeleafListener.engine;
 
@@ -24,6 +28,7 @@ public class UploadServlet extends HttpServlet {
     private static final int CHUNK_SIZE = 2000;
 
     private final UserProcessor userProcessor = new UserProcessor();
+    private final CityProcessor cityProcessor = new CityProcessor();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -42,7 +47,9 @@ public class UploadServlet extends HttpServlet {
             } else {
                 Part filePart = req.getPart("fileToUpload");
                 try (InputStream is = filePart.getInputStream()) {
-                    List<UserProcessor.FailedEmails> failed = userProcessor.process(is, chunkSize);
+                    val processor = new StaxStreamProcessor(is);
+                    Map<String, City> cities = cityProcessor.process(processor);
+                    List<UserProcessor.FailedEmails> failed = userProcessor.process(processor, cities, chunkSize);
                     log.info("Failed users: " + failed);
                     final WebContext webContext =
                             new WebContext(req, resp, req.getServletContext(), req.getLocale(),

@@ -11,9 +11,10 @@ import ru.javaops.masterjava.persist.model.User;
 import java.util.List;
 
 @RegisterMapperFactory(EntityMapperFactory.class)
-public abstract class UserDao implements AbstractDao {
+public abstract class UserDao implements AbstractDao<User> {
 
-    public User insert(User user) {
+    @Override
+    public <T extends User> T insert(T user) {
         if (user.isNew()) {
             int id = insertGeneratedId(user);
             user.setId(id);
@@ -23,7 +24,7 @@ public abstract class UserDao implements AbstractDao {
         return user;
     }
 
-    @SqlQuery("SELECT nextval('user_seq')")
+    @SqlQuery("SELECT nextval('global_seq')")
     abstract int getNextVal();
 
     @Transaction
@@ -31,27 +32,27 @@ public abstract class UserDao implements AbstractDao {
         int id = getNextVal();
         //до postgres 10+
         //DBIProvider.getDBI().useHandle(h -> h.execute("ALTER SEQUENCE user_seq RESTART WITH " + (id + step)));
-        DBIProvider.getDBI().useHandle(h -> h.execute("SELECT setval('user_seq', " + (id + step - 1) + ")"));
+        DBIProvider.getDBI().useHandle(h -> h.execute("SELECT setval('global_seq', " + (id + step - 1) + ")"));
         return id;
     }
 
-    @SqlUpdate("INSERT INTO users (full_name, email, flag) VALUES (:fullName, :email, CAST(:flag AS USER_FLAG)) ")
+    @SqlUpdate("INSERT INTO users (full_name, email, flag, city_id) VALUES (:fullName, :email, CAST(:flag AS USER_FLAG), :city) ")
     @GetGeneratedKeys
     abstract int insertGeneratedId(@BindBean User user);
 
-    @SqlUpdate("INSERT INTO users (id, full_name, email, flag) VALUES (:id, :fullName, :email, CAST(:flag AS USER_FLAG)) ")
+    @SqlUpdate("INSERT INTO users (id, full_name, email, flag, city_id) VALUES (:id, :fullName, :email, CAST(:flag AS USER_FLAG), :city) ")
     abstract void insertWitId(@BindBean User user);
 
     @SqlQuery("SELECT * FROM users ORDER BY full_name, email LIMIT :it")
     public abstract List<User> getWithLimit(@Bind int limit);
 
     //   http://stackoverflow.com/questions/13223820/postgresql-delete-all-content
-    @SqlUpdate("TRUNCATE users")
     @Override
+    @SqlUpdate("TRUNCATE users")
     public abstract void clean();
 
     //    https://habrahabr.ru/post/264281/
-    @SqlBatch("INSERT INTO users (id, full_name, email, flag) VALUES (:id, :fullName, :email, CAST(:flag AS USER_FLAG))" +
+    @SqlBatch("INSERT INTO users (id, full_name, email, flag, city_id) VALUES (:id, :fullName, :email, CAST(:flag AS USER_FLAG), :city)" +
             "ON CONFLICT DO NOTHING")
 //            "ON CONFLICT (email) DO UPDATE SET full_name=:fullName, flag=CAST(:flag AS USER_FLAG)")
     public abstract int[] insertBatch(@BindBean List<User> users, @BatchChunkSize int chunkSize);

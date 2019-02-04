@@ -13,4 +13,5 @@ public abstract class AbstractDaoTest<DAO extends AbstractDao> {
     protected AbstractDaoTest(Class<DAO> daoClass) {
         this.dao = DBIProvider.getDao(daoClass);
     }
+
 }

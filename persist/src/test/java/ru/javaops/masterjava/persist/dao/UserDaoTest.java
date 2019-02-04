@@ -4,12 +4,14 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.skife.jdbi.v2.exceptions.UnableToExecuteStatementException;
 import ru.javaops.masterjava.persist.UserTestData;
 import ru.javaops.masterjava.persist.model.User;
 
 import java.util.List;
 
 import static ru.javaops.masterjava.persist.UserTestData.FIST5_USERS;
+import static ru.javaops.masterjava.persist.UserTestData.USER_NO_CITY;
 
 public class UserDaoTest extends AbstractDaoTest<UserDao> {
 
@@ -39,11 +41,14 @@ public class UserDaoTest extends AbstractDaoTest<UserDao> {
         dao.insertBatch(FIST5_USERS, 3);
         Assert.assertEquals(5, dao.getWithLimit(100).size());
     }
-
     @Test
     public void getSeqAndSkip() throws Exception {
         int seq1 = dao.getSeqAndSkip(5);
         int seq2 = dao.getSeqAndSkip(1);
         Assert.assertEquals(5, seq2 - seq1);
+    }
+    @Test(expected = UnableToExecuteStatementException.class)
+    public void noCityTest () {
+     dao.insert(USER_NO_CITY);
     }
 }

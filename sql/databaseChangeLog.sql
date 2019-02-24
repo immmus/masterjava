@@ -32,3 +32,11 @@ CREATE TABLE user_group (
   group_id INTEGER NOT NULL REFERENCES groups (id),
   CONSTRAINT users_group_idx UNIQUE (user_id, group_id)
 );
+--changeset immmus:3
+CREATE TABLE mail_Send_Result (
+                      id         INTEGER PRIMARY KEY DEFAULT nextval('common_seq'),
+                      mail_to       TEXT  NULL,
+                      mail_cc      TEXT NULL,
+                      result        TEXT not null
+);
+

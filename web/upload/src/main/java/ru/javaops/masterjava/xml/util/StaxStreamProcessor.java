@@ -40,7 +40,7 @@ public class StaxStreamProcessor implements AutoCloseable {
         return reader;
     }
 
-    public String getAttribute(String name) throws XMLStreamException {
+    public String getAttribute(String name) {
         return reader.getAttributeValue(null, name);
     }
 
@@ -54,7 +54,7 @@ public class StaxStreamProcessor implements AutoCloseable {
         return false;
     }
 
-    public String getValue(int event) throws XMLStreamException {
+    public String getValue(int event) {
         return (event == XMLEvent.CHARACTERS) ? reader.getText() : reader.getLocalName();
     }
 

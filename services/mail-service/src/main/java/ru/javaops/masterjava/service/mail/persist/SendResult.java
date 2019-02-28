@@ -20,7 +20,7 @@ public class SendResult extends BaseEntity {
     private @Column("mail_cc") String mailCc;
     private String result;
 
-    public static SendResult listsOf(Set<Addressee> mailsTo, Set<Addressee> mailsCc, String result) {
+    public static SendResult setsOf(Set<Addressee> mailsTo, Set<Addressee> mailsCc, String result) {
         return new SendResult(getMails(mailsTo), getMails(mailsCc), result);
     }
 

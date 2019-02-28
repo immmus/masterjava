@@ -30,6 +30,6 @@ public class MailSender {
              e.printStackTrace();
              result = "Error: "  + e.getMessage();
         }
-        dao.insert(SendResult.listsOf(to, cc, result));
+        dao.insert(SendResult.setsOf(to, cc, result));
     }
 }

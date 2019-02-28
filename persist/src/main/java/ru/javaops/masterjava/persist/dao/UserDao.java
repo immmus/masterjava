@@ -9,6 +9,9 @@ import ru.javaops.masterjava.persist.DBIProvider;
 import ru.javaops.masterjava.persist.model.User;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
+import java.util.function.Function;
 
 @RegisterMapperFactory(EntityMapperFactory.class)
 public abstract class UserDao implements AbstractDao<User> {
@@ -57,12 +60,11 @@ public abstract class UserDao implements AbstractDao<User> {
 //            "ON CONFLICT (email) DO UPDATE SET full_name=:fullName, flag=CAST(:flag AS USER_FLAG)")
     public abstract int[] insertBatch(@BindBean List<User> users, @BatchChunkSize int chunkSize);
 
-
-    public List<String> insertAndGetConflictEmails(List<User> users) {
+    public Map<Integer, User> insertAndGetConflictEmailUsers(List<User> users) {
         int[] result = insertBatch(users, users.size());
         return IntStreamEx.range(0, users.size())
                 .filter(i -> result[i] == 0)
-                .mapToObj(index -> users.get(index).getEmail())
-                .toList();
+                .mapToObj(users::get)
+                .toMap(User::getId, Function.identity());
     }
 }

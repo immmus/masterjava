@@ -13,7 +13,14 @@ import java.util.List;
 
 @Slf4j
 public class MailSender {
-    static void sendMail(List<Addressee> to, List<Addressee> cc, String subject, String body) {
+    private static final MailCaseDao MAIL_CASE_DAO = DBIProvider.getDao(MailCaseDao.class);
+
+    static MailResult sendTo(Addressee to, String subject, String body) {
+        val state = sendToGroup(ImmutableSet.of(to), ImmutableSet.of(), subject, body);
+        return new MailResult(to.getEmail(), state);
+    }
+
+    static String sendToGroup(Set<Addressee> to, Set<Addressee> cc, String subject, String body) {
         log.info("Send mail to \'" + to + "\' cc \'" + cc + "\' subject \'" + subject + (log.isDebugEnabled() ? "\nbody=" + body : ""));
         String state = MailResult.OK;
         try {

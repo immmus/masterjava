@@ -9,7 +9,7 @@ import ru.javaops.masterjava.persist.DBIProvider;
 import ru.javaops.masterjava.service.mail.persist.MailCase;
 import ru.javaops.masterjava.service.mail.persist.MailCaseDao;
 
-import java.util.List;
+import java.util.Set;
 
 @Slf4j
 public class MailSender {

@@ -1,6 +1,6 @@
 package ru.javaops.masterjava.service.mail;
 
-import com.google.common.collect.ImmutableList;
+import com.google.common.collect.ImmutableSet;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;

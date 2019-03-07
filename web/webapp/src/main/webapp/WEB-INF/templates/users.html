@@ -44,6 +44,9 @@
                 <label for="body">Body</label>
                 <textarea class="form-control" id="body" rows="3"></textarea>
                 <button type="button" class="btn btn-outline-secondary col-12 mt-3" onclick="send()">Send</button>
+                <div>
+                    <h3 id="result"></h3>
+                </div>
             </div>
         </form>
     </div>
@@ -51,10 +54,14 @@
 </body>
 <script type="text/javascript">
     function send() {
+        $('#result').html("Оправляем.....");
         let emails = $('input[type=checkbox]:checked').map(function () {
             return this.value;
         }).get();
-        $.post("", {emails: emails.toString(), body: $('#body').val(), subject: $('#subject').val()});
+        $.post("", {emails: emails.toString(), body: $('#body').val(), subject: $('#subject').val()})
+            .done(function (result) {
+                $('#result').html(result);
+            });
     }
 </script>
 </html>

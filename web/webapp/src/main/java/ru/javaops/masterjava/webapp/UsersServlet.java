@@ -8,6 +8,7 @@ import org.thymeleaf.util.StringUtils;
 import ru.javaops.masterjava.persist.DBIProvider;
 import ru.javaops.masterjava.persist.dao.UserDao;
 import ru.javaops.masterjava.service.mail.Addressee;
+import ru.javaops.masterjava.service.mail.GroupResult;
 import ru.javaops.masterjava.service.mail.MailWSClient;
 
 import javax.servlet.annotation.WebServlet;
@@ -37,7 +38,8 @@ public class UsersServlet extends HttpServlet {
         String subject = req.getParameter("subject");
         if (!StringUtils.isEmpty(emails)) {
             Set<Addressee> to = StreamEx.of(Splitter.on(',').splitToList(emails)).map(Addressee::new).toSet();
-            MailWSClient.sendBulk(to, subject, body);
+            GroupResult groupResult = MailWSClient.sendBulk(to, subject, body);
+            resp.getWriter().write(groupResult.toString());
         }
     }
 }

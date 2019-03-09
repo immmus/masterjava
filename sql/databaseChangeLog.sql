@@ -1,6 +1,6 @@
 --liquibase formatted sql
 
---changeset gkislin:1
+--changeset immmus:1
 CREATE SEQUENCE common_seq START 100000;
 
 CREATE TABLE city (
@@ -11,7 +11,7 @@ CREATE TABLE city (
 ALTER TABLE users
   ADD COLUMN city_ref TEXT REFERENCES city (ref) ON UPDATE CASCADE;
 
---changeset gkislin:2
+--changeset immmus:2
 CREATE TABLE project (
   id          INTEGER PRIMARY KEY DEFAULT nextval('common_seq'),
   name        TEXT UNIQUE NOT NULL,
@@ -33,7 +33,7 @@ CREATE TABLE user_group (
   CONSTRAINT users_group_idx UNIQUE (user_id, group_id)
 );
 
---changeset gkislin:3
+--changeset immmus:3
 CREATE TABLE mail_hist (
   id      SERIAL PRIMARY KEY,
   list_to TEXT NULL,

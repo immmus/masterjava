@@ -32,7 +32,7 @@
 
             <xs:complexType name="sendBulk">
                 <xs:sequence>
-                    <xs:element name="to" type="tns:addressee" maxOccurs="unbounded"/>
+                    <xs:element name="to" type="tns:Addressee" maxOccurs="unbounded"/>
                     <xs:element name="subject" type="xs:string" minOccurs="0"/>
                     <xs:element name="body" type="xs:string" minOccurs="1"/>
                 </xs:sequence>

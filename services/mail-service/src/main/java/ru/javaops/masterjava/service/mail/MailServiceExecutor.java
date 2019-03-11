@@ -19,11 +19,11 @@ public class MailServiceExecutor {
 
     private static final ExecutorService mailExecutor = Executors.newFixedThreadPool(8);
 
-    public static GroupResult sendBulk(final Set<Addressee> addressees, final String subject, final String body) throws WebStateException {
+    public static GroupResult sendBulk(final Set<Addressee> addressees, final String subject, final String body, List<Attachment> files) throws WebStateException {
         final CompletionService<MailResult> completionService = new ExecutorCompletionService<>(mailExecutor);
 
         List<Future<MailResult>> futures = StreamEx.of(addressees)
-                .map(addressee -> completionService.submit(() -> MailSender.sendTo(addressee, subject, body)))
+                .map(addressee -> completionService.submit(() -> MailSender.sendTo(addressee, subject, body, files)))
                 .toList();
 
         return new Callable<GroupResult>() {
@@ -34,7 +34,7 @@ public class MailServiceExecutor {
             public GroupResult call() throws WebStateException {
                 while (!futures.isEmpty()) {
                     try {
-                        Future<MailResult> future = completionService.poll(10, TimeUnit.SECONDS);
+                        Future<MailResult> future = completionService.poll(15, TimeUnit.SECONDS);
                         if (future == null) {
                             cancel(INTERRUPTED_BY_TIMEOUT, null);
                         }

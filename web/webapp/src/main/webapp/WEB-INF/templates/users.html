@@ -3,62 +3,56 @@
     <meta charset="UTF-8">
     <title>Users</title>
 </head>
-<!--https://code.jquery.com/-->
 <!--http://stackoverflow.com/a/24070373/548473-->
-<script src="https://code.jquery.com/jquery-3.2.1.min.js"
-        integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
-        crossorigin="anonymous" async>
-</script>
+<link rel="stylesheet" href="webjars/bootstrap/4.1.3/css/bootstrap.min.css">
+<script type="text/javascript" src="webjars/bootstrap/4.1.3/js/bootstrap.min.js" async></script>
+<script type="text/javascript" src="webjars/jquery/3.3.1-1/jquery.min.js" async></script>
+<script type="text/javascript" src="resources/sending.js" async></script>
 <body>
 <section>
-    <table border="1" cellpadding="8" cellspacing="0">
-        <thead>
-        <tr>
-            <th>#</th>
-            <th>Full Name</th>
-            <th>Email</th>
-            <th>Flag</th>
-            <th/>
-        </tr>
-        </thead>
-        <tbody>
-        <!--/*@thymesVar id="users" type="java.util.List<ru.javaops.masterjava.persist.model.User>"*/-->
-        <tr th:each="user,iter: ${users}">
-            <td th:text="${iter.count}"></td>
-            <td th:text="${user.fullName}"></td>
-            <td th:utext="${user.email}"></td>
-            <td th:text="${user.flag}"></td>
-            <td><input type="checkbox" th:value="|${user.fullName} <${user.email}>|"/></td>
-        </tr>
-        </tbody>
-    </table>
-    <hr/>
-    <p>
-        <input id="subject" placeholder="subject" size="30">
-    </p>
-    <p>
-        <textarea id="body" placeholder="mail body" cols=75 rows=5></textarea><br/>
-    </p>
-    <p>
-        <button type="button" onclick="send()">Send</button>
-    </p>
+    <div class="jumbotron pt-4">
+        <div class="container">
+            <table border="1" cellpadding="8" cellspacing="0" class="form-group col-md-6">
+                <thead>
+                <tr>
+                    <th>#</th>
+                    <th>Full Name</th>
+                    <th>Email</th>
+                    <th>Flag</th>
+                    <th>Choose</th>
+                </tr>
+                </thead>
+                <tbody>
+                <!--/*@thymesVar id="users" type="java.util.List<ru.javaops.masterjava.persist.model.User>"*/-->
+                <tr th:each="user,iter: ${users}">
+                    <td th:text="${iter.count}"></td>
+                    <td th:text="${user.fullName}"></td>
+                    <td th:utext="${user.email}"></td>
+                    <td th:text="${user.flag}"></td>
+                    <td>
+                        <label>
+                            <input type="checkbox" th:value="|${user.fullName} <${user.email}>|"/>
+                        </label>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <form>
+                <div class="form-group col-md-6">
+                    <label for="subject">Subject</label>
+                    <input type="text" class="form-control" id="subject" placeholder="Subject" required>
+                    <input type="file" class="form-control-file mt-3" name="attachment" id="attachment" multiple>
+                </div>
+
+                <div class="form-group col-md-6">
+                    <label for="body">Body</label>
+                    <textarea class="form-control" id="body" rows="3" required></textarea>
+                    <button type="button" class="btn btn-outline-secondary col-12 mt-3" onclick="send()">Send</button>
+                </div>
+            </form>
+        </div>
+    </div>
     <pre id="result"></pre>
 </section>
-<script type="text/javascript">
-    function send() {
-        $('#result').html("Sending ...");
-        var users = $("input:checkbox:checked").map(function () {
-            return this.value;
-        }).get();
-//        https://stackoverflow.com/a/22213543/548473
-        $.post("send", "users=" + users + "&subject=" + $("#subject").val() + "&body=" + $("#body").val())
-            .done(function (result) {
-                $('#result').html(result);
-            })
-            .fail(function (result) {
-                $('#result').html(result);
-            });
-    }
-</script>
 </body>
 </html>

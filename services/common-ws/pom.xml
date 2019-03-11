@@ -28,10 +28,6 @@
             <version>2.3.0</version>
             <exclusions>
                 <exclusion>
-                    <groupId>org.jvnet.mimepull</groupId>
-                    <artifactId>mimepull</artifactId>
-                </exclusion>
-                <exclusion>
                     <groupId>javax.xml.bind</groupId>
                     <artifactId>jaxb-api</artifactId>
                 </exclusion>

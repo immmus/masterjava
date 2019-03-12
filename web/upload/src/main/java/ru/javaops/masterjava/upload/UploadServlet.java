@@ -17,7 +17,7 @@ import java.util.List;
 
 import static ru.javaops.masterjava.common.web.ThymeleafListener.engine;
 
-@WebServlet(urlPatterns = "/", loadOnStartup = 1)
+@WebServlet(urlPatterns = "", loadOnStartup = 1)
 @MultipartConfig(fileSizeThreshold = 1024 * 1024 * 10) //10 MB in memory limit
 @Slf4j
 public class UploadServlet extends HttpServlet {

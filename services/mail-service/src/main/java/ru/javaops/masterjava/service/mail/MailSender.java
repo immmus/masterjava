@@ -9,7 +9,13 @@ import ru.javaops.masterjava.ExceptionType;
 import ru.javaops.masterjava.persist.DBIProvider;
 import ru.javaops.masterjava.service.mail.persist.MailCase;
 import ru.javaops.masterjava.service.mail.persist.MailCaseDao;
-import ru.javaops.web.WebStateException;
+import ru.javaops.masterjava.web.WebStateException;
+
+import javax.mail.internet.MimeUtility;
+import java.io.UnsupportedEncodingException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+import java.util.Set;
 
 import java.util.Set;
 

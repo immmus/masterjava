@@ -5,6 +5,8 @@ import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.io.Resources;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.event.Level;
+import ru.javaops.masterjava.web.AuthUtil;
 import ru.javaops.masterjava.web.WebStateException;
 import ru.javaops.masterjava.web.WsClient;
 
@@ -16,6 +18,11 @@ import java.util.Set;
 @Slf4j
 public class MailWSClient {
     private static final WsClient<MailService> WS_CLIENT;
+    public static final String USER = "user";
+    public static final String PASSWORD = "password";
+    private static final SoapLoggingHandlers.ClientHandler LOGGING_HANDLER = new SoapLoggingHandlers.ClientHandler(Level.DEBUG);
+
+    public static String AUTH_HEADER = AuthUtil.encodeBasicAuthHeader(USER, PASSWORD);
 
     static {
         WS_CLIENT = new WsClient<>(Resources.getResource("wsdl/mailService.wsdl"),
@@ -40,7 +47,10 @@ public class MailWSClient {
     }
 
     private static MailService getPort() {
-        return WS_CLIENT.getPort(new MTOMFeature(1024));
+        MailService port = WS_CLIENT.getPort(new MTOMFeature(1024));
+        WsClient.setAuth(port, USER, PASSWORD);
+        WsClient.setHandler(port, LOGGING_HANDLER);
+        return port;
     }
 
     public static Set<Addressee> split(String addressees) {

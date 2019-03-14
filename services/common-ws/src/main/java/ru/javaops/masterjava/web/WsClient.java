@@ -40,6 +40,19 @@ public class WsClient<T> {
         return port;
     }
 
+    public static <T> void setAuth(T port, String user, String password) {
+        Map<String, Object> requestContext = ((BindingProvider) port).getRequestContext();
+        requestContext.put(BindingProvider.USERNAME_PROPERTY, user);
+        requestContext.put(BindingProvider.PASSWORD_PROPERTY, password);
+    }
+
+    public static <T> void setHandler(T port, Handler handler) {
+        Binding binding = ((BindingProvider) port).getBinding();
+        List<Handler> handlerList = binding.getHandlerChain();
+        handlerList.add(handler);
+        binding.setHandlerChain(handlerList);
+    }
+
     public static WebStateException getWebStateException(Throwable t, ExceptionType type) {
         return (t instanceof WebStateException) ? (WebStateException) t : new WebStateException(t, type);
     }

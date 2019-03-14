@@ -5,10 +5,13 @@ import ru.javaops.masterjava.ExceptionType;
 import ru.javaops.masterjava.config.Configs;
 
 import javax.xml.namespace.QName;
+import javax.xml.ws.Binding;
 import javax.xml.ws.BindingProvider;
 import javax.xml.ws.Service;
 import javax.xml.ws.WebServiceFeature;
+import javax.xml.ws.handler.Handler;
 import java.net.URL;
+import java.util.List;
 import java.util.Map;
 
 public class WsClient<T> {

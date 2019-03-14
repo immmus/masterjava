@@ -9,6 +9,7 @@ import org.slf4j.event.Level;
 import ru.javaops.masterjava.web.AuthUtil;
 import ru.javaops.masterjava.web.WebStateException;
 import ru.javaops.masterjava.web.WsClient;
+import ru.javaops.masterjava.web.handler.SoapLoggingHandlers;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.soap.MTOMFeature;

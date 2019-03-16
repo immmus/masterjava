@@ -1,8 +1,9 @@
 package ru.javaops.masterjava.web;
 
-import com.typesafe.config.Config;
+import org.slf4j.event.Level;
 import ru.javaops.masterjava.ExceptionType;
-import ru.javaops.masterjava.config.Configs;
+import ru.javaops.masterjava.config.HostConfig;
+import ru.javaops.masterjava.web.handler.SoapLoggingHandlers;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Binding;
@@ -15,15 +16,10 @@ import java.util.List;
 import java.util.Map;
 
 public class WsClient<T> {
-    private static Config HOSTS;
-
     private final Class<T> serviceClass;
     private final Service service;
+    private HostConfig hostConfig;
     private String endpointAddress;
-
-    static {
-        HOSTS = Configs.getConfig("hosts.conf", "hosts");
-    }
 
     public WsClient(URL wsdlUrl, QName qname, Class<T> serviceClass) {
         this.serviceClass = serviceClass;
@@ -31,7 +27,8 @@ public class WsClient<T> {
     }
 
     public void init(String host, String endpointAddress) {
-        this.endpointAddress = HOSTS.getString(host) + endpointAddress;
+        this.hostConfig = new HostConfig(host);
+        this.endpointAddress = this.hostConfig.getEndpoint() + endpointAddress;
     }
 
     //  Post is not thread-safe (http://stackoverflow.com/a/10601916/548473)
@@ -40,6 +37,16 @@ public class WsClient<T> {
         BindingProvider bp = (BindingProvider) port;
         Map<String, Object> requestContext = bp.getRequestContext();
         requestContext.put(BindingProvider.ENDPOINT_ADDRESS_PROPERTY, endpointAddress);
+        if (hostConfig.hasPassAndUser()) {
+            setAuth(port, hostConfig.getUser(), hostConfig.getPassword());
+        }
+        if (hostConfig.getDebugClient() != null) {
+            Level loggingLevel = Level.valueOf(hostConfig.getDebugClient());
+            setHandler(
+                    port,
+                    new SoapLoggingHandlers.ClientHandler(loggingLevel)
+            );
+        }
         return port;
     }
 
@@ -58,5 +65,9 @@ public class WsClient<T> {
 
     public static WebStateException getWebStateException(Throwable t, ExceptionType type) {
         return (t instanceof WebStateException) ? (WebStateException) t : new WebStateException(t, type);
+    }
+
+    public HostConfig getConfig() {
+        return this.hostConfig;
     }
 }

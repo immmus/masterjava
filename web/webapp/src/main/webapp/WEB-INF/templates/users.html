@@ -48,6 +48,12 @@
     <pre id="result"></pre>
 </section>
 <script type="text/javascript">
+    var transport = "SOAP"; //default
+
+    function setTransport(value) {
+        transport = value;
+    }
+
     function send() {
         $('#result').html("Sending ...");
         var users = $("input:checkbox:checked").map(function () {
@@ -71,7 +77,7 @@
         }).done(function (result) {
             $('#result').html(result);
         }).fail(function (result) {
-            $('#result').html(result);
+            $('#result').html(result.responseText);
         });
     }
 </script>

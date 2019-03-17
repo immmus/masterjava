@@ -31,7 +31,12 @@ public class WsClient<T> {
     }
 
     public void init(String host, String endpointAddress) {
-        this.endpointAddress = HOSTS.getString(host) + endpointAddress;
+        this.hostConfig = new HostConfig(
+                HOSTS.getConfig(host).withFallback(Configs.getConfig("defaults.conf")), endpointAddress);
+    }
+
+    public HostConfig getHostConfig() {
+        return hostConfig;
     }
 
     //  Post is not thread-safe (http://stackoverflow.com/a/10601916/548473)

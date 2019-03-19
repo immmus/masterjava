@@ -1,14 +1,10 @@
 package ru.javaops.masterjava.service.mail.util;
 
-import lombok.AllArgsConstructor;
-import org.apache.commons.io.input.CloseShieldInputStream;
 import ru.javaops.masterjava.service.mail.Attachment;
 
 import javax.activation.DataHandler;
 import javax.activation.DataSource;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
+import java.io.*;
 
 public class Attachments {
     public static Attachment getAttachment(String name, InputStream inputStream) {
@@ -17,17 +13,36 @@ public class Attachments {
 
     //    http://stackoverflow.com/questions/2830561/how-to-convert-an-inputstream-to-a-datahandler
     //    http://stackoverflow.com/a/10783565/548473
-    @AllArgsConstructor
     private static class InputStreamDataSource implements DataSource {
-        private InputStream inputStream;
+        private ByteArrayOutputStream buffer = new ByteArrayOutputStream();
+
+        public InputStreamDataSource(InputStream inputStream) {
+            if (inputStream != null) {
+                try {
+                    int nRead;
+                    byte[] data = new byte[16384];
+                    while ((nRead = inputStream.read(data, 0, data.length)) != -1) {
+                        buffer.write(data, 0, nRead);
+                    }
+
+                    buffer.flush();
+                    inputStream.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            } else {
+                throw new IllegalArgumentException("InputStream is null");
+            }
+        }
+
 
         @Override
-        public InputStream getInputStream() throws IOException {
-            return new CloseShieldInputStream(inputStream);
+        public InputStream getInputStream() {
+            return new ByteArrayInputStream(buffer.toByteArray());
         }
 
         @Override
-        public OutputStream getOutputStream() throws IOException {
+        public OutputStream getOutputStream() {
             throw new UnsupportedOperationException("Not implemented");
         }
 

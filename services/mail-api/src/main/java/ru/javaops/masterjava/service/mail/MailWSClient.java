@@ -43,11 +43,6 @@ public class MailWSClient {
         return WS_CLIENT.getPort(new MTOMFeature(1024));
     }
 
-    public static Set<Addressee> split(String addressees) {
-        Iterable<String> split = Splitter.on(',').trimResults().omitEmptyStrings().split(addressees);
-        return ImmutableSet.copyOf(Iterables.transform(split, Addressee::new));
-    }
-
     public static WsClient.HostConfig getHostConfig() {
         return WS_CLIENT.getHostConfig();
     }

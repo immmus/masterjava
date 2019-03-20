@@ -11,8 +11,8 @@ import org.hibernate.validator.constraints.NotBlank;
 import ru.javaops.masterjava.service.mail.Attachment;
 import ru.javaops.masterjava.service.mail.GroupResult;
 import ru.javaops.masterjava.service.mail.MailServiceExecutor;
-import ru.javaops.masterjava.service.mail.MailWSClient;
 import ru.javaops.masterjava.service.mail.util.Attachments;
+import ru.javaops.masterjava.service.mail.util.WSutil;
 import ru.javaops.masterjava.web.WebStateException;
 
 import javax.ws.rs.*;
@@ -65,6 +65,6 @@ public class MailRS {
         } else {
             attachments = ImmutableList.of();
         }
-        return MailServiceExecutor.sendBulk(MailWSClient.split(users), subject, body, attachments);
+        return MailServiceExecutor.sendBulk(WSutil.split(users), subject, body, attachments);
     }
 }

@@ -35,13 +35,15 @@ public class AkkaMailListener implements ServletContextListener {
     public static class MailActor extends AbstractActor {
         @Override
         public Receive createReceive() {
-            return receiveBuilder().match(MailUtils.MailObject.class,
-                    mailObject -> {
-                        log.info("Receive mail form webappActor");
-                        GroupResult groupResult = MailServiceExecutor.sendBulk(mailObject);
-                        log.info("Send result to webappActor");
-                        sender().tell(groupResult, self());
-                    })
+            return receiveBuilder()
+                    .match(
+                            MailUtils.MailObject.class,
+                            mailObject -> {
+                                log.info("Receive mail form webappActor");
+                                GroupResult groupResult = MailServiceExecutor.sendBulk(mailObject);
+                                log.info("Send result to webappActor");
+                                sender().tell(groupResult, self());
+                            })
                     .build();
         }
     }

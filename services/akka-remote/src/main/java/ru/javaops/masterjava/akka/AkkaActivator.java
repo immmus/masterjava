@@ -35,6 +35,10 @@ public class AkkaActivator {
         log.info("Start AKKA actor: {}", name);
         return system.actorOf(Props.create(actorClass), name);
     }
+    public <T> ActorRef startActor(Class<T> actorClass, String name, Object... objects) {
+        log.info("Start AKKA actor: {}", name);
+        return system.actorOf(Props.create(actorClass, objects), name);
+    }
 
     public <T> T getTypedRef(Class<T> typedClass, String path) {
         log.info("Get typed reference with path={}", path);

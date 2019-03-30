@@ -34,6 +34,19 @@ public class WebUtil {
         }
         resp.getWriter().write(result);
     }
+    public static void doAsync(HttpServletResponse resp, Functions.RunnableEx doer) throws IOException {
+        resp.setCharacterEncoding("UTF-8");
+        try {
+            log.info("Start async process");
+            doer.run();
+            log.info("async start");
+        } catch (Exception e) {
+            log.error("Async process failed", e);
+            String message = e.getMessage();
+            String result = (message != null) ? message : e.getClass().getName();
+            resp.getWriter().write(result);
+        }
+    }
 
     public static String getNotEmptyParam(HttpServletRequest req, String param) {
         String value = req.getParameter(param);

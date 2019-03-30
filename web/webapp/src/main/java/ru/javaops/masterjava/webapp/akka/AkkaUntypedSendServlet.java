@@ -11,6 +11,7 @@ import javax.servlet.AsyncContext;
 import javax.servlet.ServletConfig;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
+import javax.servlet.annotation.WebInitParam;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -24,7 +25,14 @@ import static ru.javaops.masterjava.webapp.WebUtil.createMailObject;
 import static ru.javaops.masterjava.webapp.WebUtil.doAsync;
 import static ru.javaops.masterjava.webapp.akka.AkkaWebappListener.akkaActivator;
 
-@WebServlet(value = "/sendAkkaUntyped", loadOnStartup = 1, asyncSupported = true)
+@WebServlet(
+        value = "/sendAkkaUntyped",
+        loadOnStartup = 1,
+        asyncSupported = true,
+        initParams = @WebInitParam(
+                name = "threadPoolSize",
+                value = "8"
+        ))
 @Slf4j
 @MultipartConfig
 public class AkkaUntypedSendServlet extends HttpServlet {
@@ -35,7 +43,7 @@ public class AkkaUntypedSendServlet extends HttpServlet {
     public void init(ServletConfig config) throws ServletException {
         super.init(config);
         mailActor = akkaActivator.getActorRef("akka.tcp://MailService@127.0.0.1:2553/user/mail-actor");
-        executorService = Executors.newFixedThreadPool(8);
+        executorService = Executors.newFixedThreadPool(Integer.parseInt(getInitParameter("threadPoolSize")));
     }
 
     @Override

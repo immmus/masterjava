@@ -4,6 +4,8 @@ import com.google.common.base.Strings;
 import com.google.common.collect.ImmutableList;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.io.IOUtils;
+import ru.javaops.masterjava.service.mail.Attachment;
+import ru.javaops.masterjava.service.mail.util.MailUtils;
 import ru.javaops.masterjava.service.mail.util.MailUtils.MailObject;
 import ru.javaops.masterjava.util.Functions;
 
@@ -13,11 +15,14 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.Part;
 import java.io.IOException;
 import java.util.AbstractMap.SimpleImmutableEntry;
+import java.util.ArrayList;
+import java.util.List;
 
 import static com.google.common.base.Preconditions.checkArgument;
 
 @Slf4j
 public class WebUtil {
+    private final static String FILE_ATTACH = "attachment";
 
     public static void doAsync(HttpServletResponse resp, Functions.RunnableEx doer) throws IOException {
         resp.setCharacterEncoding("UTF-8");
@@ -56,11 +61,37 @@ public class WebUtil {
     }
 
     public static MailObject createMailObject(HttpServletRequest req) throws IOException, ServletException {
-        Part filePart = req.getPart("attach");
+        List<SimpleImmutableEntry<String, byte[]>> attachments = null;
+        for (Part part : req.getParts()) {
+            if (part.getName().startsWith(FILE_ATTACH)) {
+                if (attachments == null) {
+                    attachments = new ArrayList<>();
+                }
+                attachments.add(
+                        new SimpleImmutableEntry<>(
+                                part.getSubmittedFileName(),
+                                IOUtils.toByteArray(part.getInputStream())
+                        ));
+            }
+        }
         return new MailObject(getNotEmptyParam(req, "users"), req.getParameter("subject"), getNotEmptyParam(req, "body"),
-                filePart == null ?
-                        ImmutableList.of() :
-                        ImmutableList.of(new SimpleImmutableEntry<>(filePart.getSubmittedFileName(), IOUtils.toByteArray(filePart.getInputStream())))
-        );
+                attachments == null ? ImmutableList.of() : ImmutableList.copyOf(attachments));
+    }
+
+    public static List<Attachment> createAttachments(HttpServletRequest req) throws IOException, ServletException {
+        List<Attachment> attachments = null;
+        for (Part part : req.getParts()) {
+            if (part.getName().startsWith(FILE_ATTACH)) {
+                if (attachments == null) {
+                    attachments = new ArrayList<>();
+                }
+                attachments.add(
+                        MailUtils.getAttachment(
+                                part.getSubmittedFileName(),
+                                part.getInputStream())
+                );
+            }
+        }
+        return attachments == null ? ImmutableList.of() : ImmutableList.copyOf(attachments);
     }
 }

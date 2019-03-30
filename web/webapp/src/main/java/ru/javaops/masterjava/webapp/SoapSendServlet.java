@@ -1,7 +1,7 @@
 package ru.javaops.masterjava.webapp;
 
-import com.google.common.collect.ImmutableList;
 import lombok.extern.slf4j.Slf4j;
+import ru.javaops.masterjava.service.mail.Attachment;
 import ru.javaops.masterjava.service.mail.GroupResult;
 import ru.javaops.masterjava.service.mail.MailWSClient;
 import ru.javaops.masterjava.service.mail.util.MailUtils;
@@ -11,11 +11,10 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.Part;
 import java.io.IOException;
+import java.util.List;
 
-import static ru.javaops.masterjava.webapp.WebUtil.doAndWriteResponse;
-import static ru.javaops.masterjava.webapp.WebUtil.getNotEmptyParam;
+import static ru.javaops.masterjava.webapp.WebUtil.*;
 
 @WebServlet("/sendSoap")
 @Slf4j
@@ -29,10 +28,9 @@ public class SoapSendServlet extends HttpServlet {
             String users = getNotEmptyParam(req, "users");
             String subject = req.getParameter("subject");
             String body = getNotEmptyParam(req, "body");
-            Part filePart = req.getPart("attach");
-            GroupResult groupResult = MailWSClient.sendBulk(MailUtils.split(users), subject, body,
-                    filePart == null ? null :
-                            ImmutableList.of(MailUtils.getAttachment(filePart.getSubmittedFileName(), filePart.getInputStream())));
+
+            List<Attachment> attachments = createAttachments(req);
+            GroupResult groupResult = MailWSClient.sendBulk(MailUtils.split(users), subject, body, attachments);
             return groupResult.toString();
         });
     }

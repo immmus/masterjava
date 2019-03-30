@@ -19,7 +19,7 @@ public abstract class UserDao implements AbstractDao<User> {
             int id = insertGeneratedId(user);
             user.setId(id);
         } else {
-            insertWitId(user);
+            insertWithId(user);
         }
         return user;
     }
@@ -41,7 +41,7 @@ public abstract class UserDao implements AbstractDao<User> {
     abstract int insertGeneratedId(@BindBean User user);
 
     @SqlUpdate("INSERT INTO users (id, full_name, email, flag, city_ref) VALUES (:id, :fullName, :email, CAST(:flag AS USER_FLAG), :cityRef) ")
-    abstract void insertWitId(@BindBean User user);
+    abstract void insertWithId(@BindBean User user);
 
     @SqlQuery("SELECT * FROM users ORDER BY full_name, email LIMIT :it")
     public abstract List<User> getWithLimit(@Bind int limit);
